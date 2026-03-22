@@ -19,26 +19,6 @@ const COL_REVEAL = {
 export function Footer({ locale, onQuoteFormOpen }: FooterProps) {
   const t = copy[locale].footer;
 
-  const navLinks = [
-    { id: "hero", label: t.links.home },
-    { id: "a-propos", label: t.links.aPropos },
-    { id: "services", label: t.links.rituels },
-    { id: "collection", label: t.links.collection },
-    { id: "entretiens", label: t.links.entretiens },
-    { id: "livres", label: locale === "fr" ? "Boutique" : "Boutique" },
-    { id: "engagement", label: t.links.contact },
-  ];
-
-  function scrollTo(id: string) {
-    const el = document.getElementById(id);
-    if (el) {
-      const y = el.getBoundingClientRect().top + window.scrollY - 96;
-      window.scrollTo({ top: y, behavior: "smooth" });
-    } else {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  }
-
   return (
     <footer
       style={{
@@ -102,27 +82,6 @@ export function Footer({ locale, onQuoteFormOpen }: FooterProps) {
             </a>
           </motion.div>
 
-          {/* Navigation */}
-          <motion.nav variants={COL_REVEAL}>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.6875rem", fontWeight: 500, letterSpacing: "0.2em", textTransform: "uppercase", color: "#A67C52", marginBottom: "1.25rem" }}>
-              {t.nav}
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
-              {navLinks.map((link) => (
-                <button
-                  key={link.id}
-                  type="button"
-                  onClick={() => scrollTo(link.id)}
-                  style={{ textAlign: "left", fontFamily: "'Inter', sans-serif", fontSize: "0.9375rem", color: "rgba(250,248,242,0.65)", background: "none", border: "none", padding: 0, cursor: "pointer", transition: "color 0.2s" }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = "#FAF8F2")}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(250,248,242,0.65)")}
-                >
-                  {link.label}
-                </button>
-              ))}
-            </div>
-          </motion.nav>
-
           {/* Contact + Social */}
           <motion.div variants={COL_REVEAL}>
             <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.6875rem", fontWeight: 500, letterSpacing: "0.2em", textTransform: "uppercase", color: "#A67C52", marginBottom: "1.25rem" }}>
@@ -174,7 +133,7 @@ export function Footer({ locale, onQuoteFormOpen }: FooterProps) {
       <style>{`
         @media (min-width: 768px) {
           .footer-grid {
-            grid-template-columns: 1.4fr 1fr 1fr !important;
+            grid-template-columns: 1.4fr 1fr !important;
           }
         }
       `}</style>

@@ -12,12 +12,38 @@ type SiteHeaderProps = {
 export function SiteHeader({ locale, onLocaleToggle }: SiteHeaderProps) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-
+  const [hidden, setHidden] = useState(false);
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const currentY = window.scrollY;
+          setScrolled(currentY > 40);
+          // Hide when scrolling down past 100px, show when scrolling up
+          if (currentY > 100 && currentY > lastY + 8) {
+            setHidden(true);
+          } else if (currentY < lastY - 4) {
+            setHidden(false);
+          }
+          lastY = currentY;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    const onTouch = () => setHidden(false);
+
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("touchstart", onTouch, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("touchstart", onTouch);
+    };
   }, []);
 
   const t = copy[locale].nav;
@@ -49,8 +75,8 @@ export function SiteHeader({ locale, onLocaleToggle }: SiteHeaderProps) {
         className="fixed z-50"
         style={{ top: 20, left: "50%", x: "-50%", width: "calc(100% - 48px)", maxWidth: 1240 }}
         initial={{ opacity: 0, y: -18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        animate={{ opacity: hidden ? 0 : 1, y: hidden ? -30 : 0 }}
+        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       >
         <div
           style={{
